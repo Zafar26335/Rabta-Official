@@ -1,504 +1,771 @@
-Here is the complete, updated `index.html` file. I have integrated the logic for all four features so they actually function within the modal—allowing you to build a mini-CV, track applications, simulate an interview, and "apply" for gigs.
-
-```html
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rabta — Your Path Up</title>
+  <title>Rabta â€” Your Path Up</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --red: #C0392B; --red-dark: #922B21; --red-light: #FADBD8; --red-text: #7B241C;
-      --black: #111111; --white: #FFFFFF; --gray: #f5f5f5; --text-muted: #666; --border: rgba(0,0,0,0.1);
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--red:#C0392B;--red-dark:#922B21;--red-light:#FADBD8;--red-text:#7B241C;--black:#111;--white:#fff;--gray:#f5f5f5;--text-muted:#666;--border:rgba(0,0,0,0.1)}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--black);overflow-x:hidden}
 
     /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.75rem 2.5rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border); transition: 0.3s;
-    }
-    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--red); text-decoration: none; letter-spacing: 1px; }
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { text-decoration: none; color: var(--black); font-weight: 500; font-size: 0.95rem; transition: 0.2s; }
-    .nav-links a:hover { color: var(--red); }
-    .btn-nav { background: var(--red); color: white; padding: 0.6rem 1.4rem; border-radius: 4px; text-decoration: none; font-weight: 500; transition: 0.2s; }
-    .btn-nav:hover { background: var(--red-dark); }
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.75rem 2.5rem;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-logo img{height:52px;object-fit:contain;cursor:pointer;mix-blend-mode:multiply}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-size:14px;color:var(--text-muted);text-decoration:none;font-weight:500;cursor:pointer;transition:color .2s}
+    .nav-links a:hover{color:var(--red)}
+    .nav-cta{background:var(--red);color:#fff!important;padding:8px 20px;border-radius:6px}
+    .nav-cta:hover{background:var(--red-dark)!important}
 
     /* HERO */
-    .hero {
-      position: relative; padding: 10rem 2.5rem 6rem; background: var(--black); color: var(--white);
-      text-align: center; overflow: hidden;
-    }
-    .hero::before {
-      content: ""; position: absolute; top: -10%; left: -10%; width: 40%; height: 60%;
-      background: var(--red); opacity: 0.1; transform: rotate(-15deg); filter: blur(100px);
-    }
-    .hero::after {
-      content: ""; position: absolute; bottom: -10%; right: -10%; width: 30%; height: 50%;
-      background: var(--red); opacity: 0.1; transform: rotate(15deg); filter: blur(80px);
-    }
-    .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
-    .hero-badge {
-      display: inline-block; background: rgba(192, 57, 43, 0.15); color: var(--red);
-      padding: 0.4rem 1rem; border-radius: 100px; font-weight: 500; font-size: 0.85rem;
-      border: 1px solid rgba(192, 57, 43, 0.3); margin-bottom: 1.5rem;
-    }
-    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 8vw, 6rem); line-height: 0.9; margin-bottom: 1.5rem; letter-spacing: -1px; }
-    .hero h1 span { color: var(--red); }
-    .hero p { font-size: 1.2rem; color: #ccc; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-    .hero-btns { display: flex; gap: 1rem; justify-content: center; }
-    .btn-primary { background: var(--red); color: white; padding: 1rem 2.5rem; border-radius: 4px; text-decoration: none; font-weight: 500; transition: 0.2s; border: none; cursor: pointer; }
-    .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); }
-    .btn-outline { border: 1px solid rgba(255,255,255,0.3); color: white; padding: 1rem 2.5rem; border-radius: 4px; text-decoration: none; font-weight: 500; transition: 0.2s; }
-    .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;background:var(--black);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:var(--red);clip-path:polygon(50% 0%,0% 100%,100% 100%);opacity:.15;transform:rotate(20deg)}
+    .hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:350px;height:350px;background:var(--red);clip-path:polygon(50% 0%,0% 100%,100% 100%);opacity:.1;transform:rotate(-30deg)}
+    .hero-logo{mix-blend-mode:screen;height:130px;object-fit:contain;margin-bottom:2rem;position:relative;z-index:1;animation:fadeUp .8s ease both}
+    .hero-badge{display:inline-block;background:rgba(192,57,43,.2);color:#f5a89a;font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;border:1px solid rgba(192,57,43,.3);margin-bottom:1.5rem;letter-spacing:.05em;text-transform:uppercase;position:relative;z-index:1;animation:fadeUp .8s .1s ease both}
+    .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,80px);color:var(--white);line-height:1.05;max-width:700px;margin-bottom:1.25rem;letter-spacing:.02em;position:relative;z-index:1;animation:fadeUp .8s .2s ease both}
+    .hero h1 span{color:var(--red)}
+    .hero p{font-size:17px;color:rgba(255,255,255,.65);max-width:480px;line-height:1.75;margin-bottom:2.5rem;position:relative;z-index:1;animation:fadeUp .8s .3s ease both}
+    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;animation:fadeUp .8s .4s ease both}
+    .btn-primary{background:var(--red);color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s,transform .15s;text-decoration:none;display:inline-block}
+    .btn-primary:hover{background:var(--red-dark);transform:translateY(-1px)}
+    .btn-outline{background:transparent;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.25);padding:14px 32px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:border-color .2s,color .2s;text-decoration:none;display:inline-block}
+    .btn-outline:hover{border-color:rgba(255,255,255,.5);color:#fff}
 
-    /* STATS BAR */
-    .stats-bar { background: var(--red); padding: 1.5rem; color: white; display: flex; justify-content: center; gap: 4rem; overflow: hidden; }
-    .stat-item { text-align: center; }
-    .stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; display: block; }
-    .stat-lbl { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+    /* STATS */
+    .stats-bar{background:var(--red);padding:1.25rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap}
+    .stat{text-align:center}
+    .stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:.05em}
+    .stat-label{font-size:12px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
 
-    /* SECTION BASE */
-    section { padding: 6rem 2.5rem; }
-    .section-header { text-align: center; margin-bottom: 4rem; }
-    .section-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; margin-bottom: 1rem; }
-    .section-header p { color: var(--text-muted); max-width: 500px; margin: 0 auto; }
+    /* SECTIONS */
+    section{padding:5rem 2rem}
+    .section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:.75rem;text-align:center}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,48px);color:var(--black);text-align:center;margin-bottom:.5rem;letter-spacing:.02em}
+    .section-sub{font-size:15px;color:var(--text-muted);text-align:center;margin-bottom:3rem;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.6}
 
-    /* FEATURES GRID */
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
-    .feature-card {
-      background: var(--white); border: 1px solid var(--border); padding: 2.5rem; border-radius: 8px;
-      transition: 0.3s; cursor: pointer; position: relative;
-    }
-    .feature-card:hover { transform: translateY(-8px); border-color: var(--red); box-shadow: 0 20px 40px rgba(192, 57, 43, 0.1); }
-    .f-icon { width: 50px; height: 50px; background: var(--red-light); color: var(--red); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 1.5rem; }
-    .feature-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.75rem; margin-bottom: 0.75rem; }
-    .feature-card p { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
-    .learn-more { display: inline-block; margin-top: 1.5rem; color: var(--red); font-weight: 500; font-size: 0.9rem; }
+    /* FEATURES */
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;max-width:860px;margin:0 auto}
+    .feature-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:transform .2s,box-shadow .2s,border-color .2s;cursor:pointer}
+    .feature-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(192,57,43,.1);border-color:rgba(192,57,43,.3)}
+    .feature-icon{width:40px;height:40px;background:var(--red-light);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+    .feature-icon svg{width:20px;height:20px;fill:var(--red)}
+    .feature-card h3{font-size:15px;font-weight:500;color:var(--black);margin-bottom:.4rem}
+    .feature-card p{font-size:13px;color:var(--text-muted);line-height:1.6}
+    .feature-card .learn-more{font-size:12px;color:var(--red);font-weight:500;margin-top:.75rem;display:inline-block}
 
-    /* HOW IT WORKS */
-    .how { background: var(--black); color: var(--white); }
-    .steps { max-width: 800px; margin: 0 auto; }
-    .step { display: flex; gap: 2rem; margin-bottom: 3rem; position: relative; }
-    .step-num {
-      width: 40px; height: 40px; background: var(--red); color: white; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;
-      z-index: 1;
-    }
-    .step::after {
-      content: ""; position: absolute; top: 40px; left: 20px; width: 1px; height: calc(100% + 1rem);
-      background: rgba(255,255,255,0.1);
-    }
-    .step:last-child::after { display: none; }
-    .step-content h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .step-content p { color: #aaa; }
+    /* HOW */
+    #how{background:var(--black)}
+    #how .section-title{color:var(--white)}
+    #how .section-sub{color:rgba(255,255,255,.5)}
+    .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;max-width:860px;margin:0 auto}
+    .step{text-align:center;padding:2rem 1.5rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px}
+    .step-num{width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+    .step h3{font-size:15px;font-weight:500;color:#fff;margin-bottom:.4rem}
+    .step p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6}
 
-    /* MODAL SYSTEM */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-      display: flex; align-items: center; justify-content: center; z-index: 1000;
-      opacity: 0; pointer-events: none; transition: 0.3s; padding: 1.5rem;
-    }
-    .modal-overlay.active { opacity: 1; pointer-events: all; }
-    .modal-card {
-      background: var(--white); width: 100%; max-width: 700px; border-radius: 12px;
-      overflow: hidden; transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-    }
-    .modal-overlay.active .modal-card { transform: scale(1); }
-    .modal-close {
-      position: absolute; top: 1rem; right: 1rem; background: none; border: none;
-      font-size: 1.5rem; cursor: pointer; color: #999; z-index: 10;
-    }
-    .modal-head { padding: 2.5rem 2.5rem 1rem; }
-    .modal-badge {
-      display: inline-block; background: var(--red-light); color: var(--red-text);
-      padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 500; font-size: 0.75rem; margin-bottom: 0.75rem;
-    }
-    .modal-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; line-height: 1; }
-    .modal-body { padding: 0 2.5rem 2.5rem; }
-    .modal-desc { color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+    /* GIGS SECTION */
+    #gigs{background:var(--gray)}
+    .gigs-inner{max-width:760px;margin:0 auto;background:var(--white);border-radius:16px;border:1px solid var(--border);padding:2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+    .gigs-text h3{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--black);margin-bottom:.75rem}
+    .gigs-text p{font-size:14px;color:var(--text-muted);line-height:1.7}
+    .gigs-tags{display:flex;flex-wrap:wrap;gap:8px}
+    .tag{background:var(--red-light);color:var(--red-text);font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px}
 
-    /* INTERACTIVE COMPONENT MOCKS */
-    .mock-screen {
-      background: var(--gray); border-radius: 8px; border: 1px solid var(--border);
-      padding: 1.5rem; position: relative; overflow: hidden;
-    }
-    .mock-card {
-      background: white; border-radius: 6px; padding: 1rem; border: 1px solid var(--border);
-      margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;
-    }
-    .mock-card-text { display: flex; flex-direction: column; }
-    .mock-card .title { font-weight: 600; font-size: 0.9rem; }
-    .mock-card .sub { font-size: 0.75rem; color: var(--text-muted); }
-    .mock-badge { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
-    .badge-red { background: #FDEDEC; color: #A93226; }
-    .badge-green { background: #EAFAF1; color: #1D8348; }
-    .badge-orange { background: #FEF5E7; color: #AF601A; }
+    /* SIGNUP */
+    #signup{background:var(--white)}
+    .signup-wrap{max-width:560px;margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:2.5rem}
+    .signup-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--black);margin-bottom:.4rem}
+    .signup-wrap p{font-size:14px;color:var(--text-muted);margin-bottom:1.75rem;line-height:1.6}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+    .form-group label{font-size:13px;font-weight:500;color:var(--black)}
+    .form-group label .req{color:var(--red)}
+    .form-group input,.form-group select{padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white);outline:none;transition:border-color .2s}
+    .form-group input:focus,.form-group select:focus{border-color:var(--red)}
+    .form-group input.error,.form-group select.error{border-color:var(--red);background:#fff8f8}
+    .error-msg{font-size:12px;color:var(--red);margin-top:3px;display:none}
+    .form-submit{width:100%;background:var(--red);color:#fff;border:none;padding:14px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;margin-top:6px}
+    .form-submit:hover{background:var(--red-dark)}
+    .success-msg{display:none;text-align:center;padding:2rem}
+    .success-msg h3{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--black);margin-bottom:.5rem}
+    .success-msg p{font-size:14px;color:var(--text-muted)}
+    .success-icon{width:56px;height:56px;background:var(--red-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+    .success-icon svg{width:28px;height:28px;fill:var(--red)}
 
-    .gig-item { border-bottom: 1px solid var(--border); padding: 0.75rem 0; }
-    .gig-item:last-child { border: none; }
-    .gig-title { font-weight: 500; font-size: 0.9rem; margin-bottom: 0.25rem; }
-    .gig-meta { display: flex; gap: 0.5rem; align-items: center; }
-    .gig-price { color: var(--red); font-weight: bold; font-size: 0.85rem; }
+    /* FOOTER */
+    footer{background:var(--black);padding:3rem 2rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+    footer img{height:64px;object-fit:contain;margin-bottom:1rem;mix-blend-mode:screen}
+    footer p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7}
+    .footer-links{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+    .footer-links a{font-size:13px;color:rgba(255,255,255,.4);text-decoration:none;cursor:pointer}
+    .footer-links a:hover{color:var(--red)}
 
-    /* SIGNUP FORM */
-    .signup-container { max-width: 500px; margin: 0 auto; background: var(--white); border: 1px solid var(--border); padding: 3rem; border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.05); }
-    .form-group { margin-bottom: 1.25rem; text-align: left; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-muted); }
-    .form-group input, .form-group select {
-      width: 100%; padding: 0.8rem 1rem; border-radius: 4px; border: 1px solid var(--border);
-      font-family: inherit; font-size: 1rem; transition: 0.2s;
-    }
-    .form-group input:focus { outline: none; border-color: var(--red); }
-    
-    footer { background: var(--black); color: #666; padding: 4rem 2.5rem; text-align: center; border-top: 1px solid #222; }
-    footer .logo { filter: grayscale(1) brightness(0.7); margin-bottom: 2rem; display: inline-block; }
-    .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
-    .footer-links a { color: #666; text-decoration: none; font-size: 0.85rem; }
-    .footer-links a:hover { color: white; }
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem}
+    .modal-overlay.active{display:flex}
+    .modal{background:var(--white);border-radius:20px;width:100%;max-width:720px;max-height:90vh;overflow-y:auto;position:relative;animation:modalIn .25s ease}
+    @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);z-index:10}
+    .modal-close:hover{background:var(--gray)}
+    .modal-header{background:var(--black);border-radius:20px 20px 0 0;padding:2rem 2rem 1.5rem}
+    .modal-header .mbadge{display:inline-block;background:rgba(192,57,43,.25);color:#f5a89a;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.08em}
+    .modal-header h2{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:.02em}
+    .modal-header p{font-size:14px;color:rgba(255,255,255,.55);margin-top:.4rem;line-height:1.6}
+    .modal-body{padding:1.75rem 2rem 2rem}
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hero-btns { flex-direction: column; }
-      .stats-bar { flex-direction: column; gap: 1.5rem; }
-    }
+    /* FEATURE UI STYLES */
+    .fi-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;margin-bottom:10px}
+    .fi-input:focus{border-color:var(--red)}
+    .fi-btn{background:var(--red);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+    .fi-btn:hover{background:var(--red-dark)}
+    .fi-btn-sm{background:transparent;border:1px solid var(--red);color:var(--red);padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s,color .2s;white-space:nowrap}
+    .fi-btn-sm:hover,.fi-btn-sm.active{background:var(--red);color:#fff}
+    .fi-card{background:var(--gray);border-radius:12px;padding:1rem;margin-bottom:10px}
+    .fi-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+    .fi-row:last-child{border-bottom:none}
+    .fi-avatar{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#fff;flex-shrink:0}
+    .fi-info{flex:1}
+    .fi-info .name{font-size:13px;font-weight:500;color:var(--black)}
+    .fi-info .sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .fi-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+    .badge-red{background:#FADBD8;color:#922B21}
+    .badge-green{background:#d4edda;color:#155724}
+    .badge-orange{background:#fff3cd;color:#856404}
+    .deadline-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--white);border-radius:10px;border:1px solid var(--border);margin-bottom:8px}
+    .deadline-item.urgent{border-left:3px solid var(--red)}
+    .deadline-item .dl-info{flex:1}
+    .deadline-item .dl-company{font-size:13px;font-weight:500;color:var(--black)}
+    .deadline-item .dl-date{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .deadline-item .dl-countdown{font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px}
+    .dl-del{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:4px}
+    .dl-del:hover{color:var(--red)}
+    .coach-company{display:flex;align-items:center;gap:10px;padding:12px;background:var(--white);border-radius:10px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+    .coach-company:hover{border-color:var(--red)}
+    .coach-company .cc-name{font-size:13px;font-weight:500;color:var(--black)}
+    .coach-company .cc-progress{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .prog-bar{height:5px;background:var(--gray);border-radius:3px;margin-top:6px;overflow:hidden}
+    .prog-fill{height:100%;background:var(--red);border-radius:3px;transition:width .4s}
+    .coach-steps{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+    .coach-steps.open{display:block}
+    .cs-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;cursor:pointer}
+    .cs-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:background .2s,border-color .2s}
+    .cs-check.done{background:var(--red);border-color:var(--red);color:#fff;font-size:11px}
+    .cs-text{font-size:13px;color:var(--black)}
+    .cs-text.done{text-decoration:line-through;color:var(--text-muted)}
+    .gig-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:1rem;margin-bottom:10px}
+    .gig-card h4{font-size:13px;font-weight:500;color:var(--black);margin-bottom:4px}
+    .gig-meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+    .gig-price{font-size:14px;font-weight:500;color:var(--red)}
+    .gig-deadline{font-size:12px;color:var(--text-muted)}
+    .tab-bar{display:flex;gap:8px;margin-bottom:1.25rem}
+    .tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-muted);transition:background .2s,color .2s,border-color .2s}
+    .tab.active{background:var(--red);color:#fff;border-color:var(--red)}
+    .cv-preview{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.25rem}
+    .cv-name{font-size:18px;font-weight:500;color:var(--black);margin-bottom:2px}
+    .cv-contact{font-size:12px;color:var(--text-muted);margin-bottom:12px}
+    .cv-section-head{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin:10px 0 4px;border-bottom:1px solid var(--red-light);padding-bottom:4px}
+    .cv-line{font-size:12px;color:var(--black);margin-bottom:3px}
+    .cv-sub{font-size:11px;color:var(--text-muted)}
+    .empty-state{text-align:center;padding:2rem;color:var(--text-muted);font-size:14px}
+    .empty-state span{font-size:28px;display:block;margin-bottom:.5rem}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:600px){nav{padding:.75rem 1.25rem}.nav-links{gap:1rem}.nav-links li:not(:last-child){display:none}.stats-bar{gap:2rem}.gigs-inner{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.modal-header{padding:1.5rem 1.5rem 1rem}.modal-body{padding:1.25rem 1.5rem 1.5rem}}
   </style>
 </head>
 <body>
 
-  <nav id="navbar">
-    <a href="#" class="logo">RABTA</a>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#how">How it Works</a>
-      <a href="#gigs">Gigs</a>
-    </div>
-    <a href="#signup" class="btn-nav">Sign Up</a>
-  </nav>
+<nav>
+  <div class="nav-logo" onclick="scrollToId('home')"><img src="logo.png" alt="Rabta"></div>
+  <ul class="nav-links">
+    <li><a onclick="scrollToId('features')">Features</a></li>
+    <li><a onclick="scrollToId('how')">How it works</a></li>
+    <li><a onclick="scrollToId('gigs')">Gigs</a></li>
+    <li><a onclick="scrollToId('signup')" class="nav-cta">Sign up</a></li>
+  </ul>
+</nav>
 
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-badge">Join the Future of Work in Pakistan</div>
-      <h1>ELEVATE YOUR <span>CAREER</span></h1>
-      <p>The centralized ecosystem for students and professionals to build portfolios, track applications, and land high-impact opportunities.</p>
-      <div class="hero-btns">
-        <a href="#signup" class="btn-primary">Join the Waitlist</a>
-        <a href="#features" class="btn-outline">See Features</a>
-      </div>
+<!-- MODAL -->
+<div class="modal-overlay" id="featureModal" onclick="closeModalOverlay(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">âœ•</button>
+    <div class="modal-header">
+      <div class="mbadge" id="modalBadge"></div>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDesc"></p>
     </div>
-  </section>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
-  <div class="stats-bar">
-    <div class="stat-item">
-      <span class="stat-val">500+</span>
-      <span class="stat-lbl">Early Users</span>
+<!-- HERO -->
+<div class="hero" id="home">
+  <img class="hero-logo" src="logo.png" alt="Rabta">
+  <div class="hero-badge">Built for IBA students Â· Pakistan</div>
+  <h1>Stop chasing <span>internships.</span><br>Let them come to you.</h1>
+  <p>Rabta connects Pakistani students with 600+ SMEs â€” auto-filled applications, deadline alerts, tailored CVs, and interview coaching all in one place.</p>
+  <div class="hero-btns">
+    <a onclick="scrollToId('signup')" class="btn-primary" style="cursor:pointer">Sign up free</a>
+    <a onclick="scrollToId('features')" class="btn-outline" style="cursor:pointer">See how it works</a>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">600+</div><div class="stat-label">Registered SMEs</div></div>
+  <div class="stat"><div class="stat-num">250+</div><div class="stat-label">Career fair companies</div></div>
+  <div class="stat"><div class="stat-num">1-click</div><div class="stat-label">Application</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Missed deadlines</div></div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">What we offer</div>
+  <div class="section-title">Everything in one dashboard</div>
+  <div class="section-sub">Click any feature to use it</div>
+  <div class="features-grid">
+    <div class="feature-card" onclick="openModal('companies')">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+      <h3>Companies come to you</h3><p>Browse and follow 600+ SMEs. Get notified when they open applications.</p>
+      <span class="learn-more">Open feature â†’</span>
     </div>
-    <div class="stat-item">
-      <span class="stat-val">20+</span>
-      <span class="stat-lbl">Partner Firms</span>
+    <div class="feature-card" onclick="openModal('deadlines')">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></div>
+      <h3>Deadline tracker</h3><p>Add real deadlines with countdowns. Never miss an application window.</p>
+      <span class="learn-more">Open feature â†’</span>
     </div>
-    <div class="stat-item">
-      <span class="stat-val">PKR 1M+</span>
-      <span class="stat-lbl">Gig Volume</span>
+    <div class="feature-card" onclick="openModal('autofill')">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg></div>
+      <h3>Auto-fill applications</h3><p>Your profile fills every company form. Apply in under 30 seconds.</p>
+      <span class="learn-more">Open feature â†’</span>
     </div>
-    <div class="stat-item">
-      <span class="stat-val">Pakistan-wide</span>
-      <span class="stat-lbl">Presence</span>
+    <div class="feature-card" onclick="openModal('cv')">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM9 17l-3-3 1.41-1.41L9 14.17l6.59-6.59L17 9l-8 8z"/></svg></div>
+      <h3>Smart CV builder</h3><p>Pick a role type and get a tailored CV generated from your profile.</p>
+      <span class="learn-more">Open feature â†’</span>
+    </div>
+    <div class="feature-card" onclick="openModal('coaching')">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg></div>
+      <h3>Interview coaching</h3><p>Track your prep progress per company and tick off steps as you go.</p>
+      <span class="learn-more">Open feature â†’</span>
+    </div>
+    <div class="feature-card" onclick="openModal('gigsFeature')">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.5C18 2.46 15.54 0 12.5 0h-1C8.46 0 6 2.46 6 4.5c0 .62.11 1.06.18 1.5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12 17.5l-5-5 1.41-1.41L12 14.67l7.59-7.59L21 8.5l-9 9z"/></svg></div>
+      <h3>Gigs marketplace</h3><p>Browse and post real micro-tasks. Earn while you study.</p>
+      <span class="learn-more">Open feature â†’</span>
     </div>
   </div>
+</section>
 
-  <section id="features">
-    <div class="section-header">
-      <h2>Platform Features</h2>
-      <p>Tools designed specifically for the modern Pakistani workforce.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card" onclick="openModal('cv')">
-        <div class="f-icon">📄</div>
-        <h3>Smart CV Builder</h3>
-        <p>Interactive templates optimized for ATS scanning. Build your professional identity in minutes.</p>
-        <span class="learn-more">Launch Builder →</span>
-      </div>
-      <div class="feature-card" onclick="openModal('tracker')">
-        <div class="f-icon">📅</div>
-        <h3>Deadline Tracker</h3>
-        <p>Centralize your internship and job applications. Never miss a deadline at top-tier firms.</p>
-        <span class="learn-more">Manage Pipeline →</span>
-      </div>
-      <div class="feature-card" onclick="openModal('interview')">
-        <div class="f-icon">💬</div>
-        <h3>Mock Interviews</h3>
-        <p>AI-driven simulations tailored to roles at Unilever, Engro, and McKinsey.</p>
-        <span class="learn-more">Start Prep →</span>
-      </div>
-      <div class="feature-card" onclick="openModal('gigs')">
-        <div class="f-icon">🛠️</div>
-        <h3>Student Gigs</h3>
-        <p>A specialized marketplace for students to provide services and earn PKR while studying.</p>
-        <span class="learn-more">Browse Gigs →</span>
-      </div>
-    </div>
-  </section>
+<!-- HOW -->
+<section id="how">
+  <div class="section-label" style="color:rgba(192,57,43,.8)">Simple process</div>
+  <div class="section-title">How it works</div>
+  <div class="section-sub">Get started in three steps</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Build your profile</h3><p>Enter your details once. Your CV, cover letters, and forms are ready automatically.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Follow companies</h3><p>Browse 600+ SMEs. Follow the ones you like and get instant deadline alerts.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Apply in one click</h3><p>Your application is pre-filled. Review, confirm, and you're done.</p></div>
+  </div>
+</section>
 
-  <section id="how" class="how">
-    <div class="section-header">
-      <h2>How Rabta Works</h2>
-      <p>From student to professional in three easy steps.</p>
+<!-- GIGS -->
+<section id="gigs">
+  <div class="section-label">Side income</div>
+  <div class="section-title">Gigs â€” earn while you study</div>
+  <div class="section-sub">A campus-first marketplace for tasks that actually matter</div>
+  <div class="gigs-inner">
+    <div class="gigs-text"><h3>Turn your skills into income</h3><p>From proofreading to data analysis â€” small tasks, real money, flexible hours. Post a gig or pick one up.</p></div>
+    <div class="gigs-tags">
+      <span class="tag">Assignment help</span><span class="tag">Research</span><span class="tag">Data entry</span>
+      <span class="tag">Quiz prep</span><span class="tag">Presentations</span><span class="tag">Editing</span>
+      <span class="tag">Translation</span><span class="tag">Tutoring</span>
     </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>Create your Identity</h4>
-          <p>Register as a student or professional and build your data-driven profile.</p>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section id="signup">
+  <div class="section-label">Get early access</div>
+  <div class="section-title">Join Rabta today</div>
+  <div class="section-sub">Be among the first students on the platform</div>
+  <div class="signup-wrap">
+    <div id="signupForm">
+      <h3>Create your student account</h3>
+      <p>All fields are required. Your info powers the auto-fill and CV builder.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First name <span class="req">*</span></label>
+          <input type="text" id="s_fname" placeholder="Ahmed">
+          <div class="error-msg" id="e_fname">Please enter your first name</div>
+        </div>
+        <div class="form-group">
+          <label>Last name <span class="req">*</span></label>
+          <input type="text" id="s_lname" placeholder="Khan">
+          <div class="error-msg" id="e_lname">Please enter your last name</div>
         </div>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>Apply & Execute</h4>
-          <p>Use our integrated tools to apply for roles or bid on micro-tasks in the marketplace.</p>
+      <div class="form-group">
+        <label>University email <span class="req">*</span></label>
+        <input type="email" id="s_email" placeholder="ahmed.khan@khi.iba.edu.pk">
+        <div class="error-msg" id="e_email">Please enter a valid email</div>
+      </div>
+      <div class="form-group">
+        <label>Phone number <span class="req">*</span></label>
+        <input type="tel" id="s_phone" placeholder="03XX-XXXXXXX">
+        <div class="error-msg" id="e_phone">Please enter your phone number</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>University <span class="req">*</span></label>
+          <select id="s_uni">
+            <option value="">Select university</option>
+            <option>IBA Karachi</option><option>LUMS</option><option>NUST</option><option>IoBM</option><option>NED</option><option>Other</option>
+          </select>
+          <div class="error-msg" id="e_uni">Please select your university</div>
+        </div>
+        <div class="form-group">
+          <label>Year of study <span class="req">*</span></label>
+          <select id="s_year">
+            <option value="">Select year</option>
+            <option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+          </select>
+          <div class="error-msg" id="e_year">Please select your year</div>
         </div>
       </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>Scale Up</h4>
-          <p>Gain experience, receive peer-reviews, and build a verified career trajectory.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="signup" style="background: var(--gray);">
-    <div class="section-header">
-      <h2>Secure Early Access</h2>
-      <p>Be the first to know when we launch our full mobile experience.</p>
-    </div>
-    <div class="signup-container" id="signupFormContainer">
       <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" placeholder="e.g. Syed Zafar Naveed">
+        <label>CGPA <span class="req">*</span></label>
+        <input type="number" id="s_cgpa" placeholder="3.5" min="0" max="4" step="0.01">
+        <div class="error-msg" id="e_cgpa">Please enter your CGPA (0â€“4)</div>
       </div>
       <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="name@iba.edu.pk">
-      </div>
-      <div class="form-group">
-        <label>Your Role</label>
-        <select>
-          <option>Student</option>
-          <option>Fresh Professional</option>
-          <option>Client / Recruiter</option>
+        <label>Field of interest <span class="req">*</span></label>
+        <select id="s_field">
+          <option value="">Select field</option>
+          <option>Business / Finance</option><option>Marketing</option><option>Computer Science / IT</option>
+          <option>Economics</option><option>Accounting</option><option>HR / Management</option><option>Other</option>
         </select>
+        <div class="error-msg" id="e_field">Please select your field of interest</div>
       </div>
-      <button class="btn-primary" style="width:100%" onclick="submitSignup()">Join Waitlist</button>
+      <div class="form-group">
+        <label>Skills (comma separated) <span class="req">*</span></label>
+        <input type="text" id="s_skills" placeholder="Excel, Python, Financial Modelling, Public Speaking">
+        <div class="error-msg" id="e_skills">Please enter at least one skill</div>
+      </div>
+      <button class="form-submit" onclick="submitSignup()">Create my account â†’</button>
     </div>
-  </section>
-
-  <footer>
-    <a href="#" class="logo">RABTA</a>
-    <div class="footer-links">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Contact Us</a>
-      <a href="#">Instagram</a>
-      <a href="#">LinkedIn</a>
-    </div>
-    <p>&copy; 2026 Rabta Platforms Inc. All rights reserved.</p>
-  </footer>
-
-  <div class="modal-overlay" id="featureModal" onclick="closeModal(event)">
-    <div class="modal-card">
-      <button class="modal-close" onclick="closeModalBtn()">&times;</button>
-      <div class="modal-head">
-        <span class="modal-badge" id="modalBadge">Feature</span>
-        <h2 id="modalTitle">Feature Title</h2>
-      </div>
-      <div class="modal-body">
-        <p class="modal-desc" id="modalDesc">Detailed description of the tool goes here.</p>
-        <div id="modalBody"></div>
-      </div>
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <h3>You're on the list!</h3>
+      <p>Welcome to Rabta. We'll reach out as soon as we launch. Your profile is saved and ready to power your applications.</p>
     </div>
   </div>
+</section>
 
-  <script>
-    // 1. HELPER FUNCTIONS FOR INTERACTIVITY
-    function updateCV() {
-      const name = document.getElementById('cv-name').value || "Your Name";
-      const exp = document.getElementById('cv-exp').value || "Experience summary...";
-      document.getElementById('prev-name').innerText = name;
-      document.getElementById('prev-exp').innerText = exp;
-    }
+<!-- FOOTER -->
+<footer>
+  <img src="logo.png" alt="Rabta">
+  <p>Built by IBA students, for IBA students.<br>Pakistan's first student-to-SME internship platform.</p>
+  <div class="footer-links">
+    <a onclick="scrollToId('features')">Features</a>
+    <a onclick="scrollToId('how')">How it works</a>
+    <a onclick="scrollToId('gigs')">Gigs</a>
+    <a onclick="scrollToId('signup')">Sign up</a>
+  </div>
+  <p style="margin-top:2rem;font-size:12px;color:rgba(255,255,255,.2)">Â© 2025 Rabta. All rights reserved.</p>
+</footer>
 
-    function addCompany() {
-      const name = document.getElementById('comp-name').value;
-      if(!name) return;
-      const list = document.getElementById('company-list');
-      const div = document.createElement('div');
-      div.className = 'mock-card';
-      div.innerHTML = `<div class="mock-card-text"><div class="title">${name}</div><div class="sub">Status: Applied</div></div><span class="mock-badge badge-orange">Pending</span>`;
-      list.prepend(div);
-      document.getElementById('comp-name').value = "";
-    }
+<script>
+// â”€â”€â”€ STORAGE HELPERS â”€â”€â”€
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def}catch(e){return def}}
 
-    function startInterview() {
-      const btn = document.getElementById('record-btn');
-      const timer = document.getElementById('timer');
-      btn.style.display = 'none';
-      timer.style.display = 'block';
-      
-      let sec = 5;
-      const tick = setInterval(() => {
-        sec--;
-        timer.innerText = `00:0${sec}`;
-        if(sec <= 0) {
-          clearInterval(tick);
-          document.getElementById('interview-area').innerHTML = `
-            <div class="mock-card" style="border-left: 4px solid var(--red);">
-              <div class="mock-card-text">
-                <div class="title">AI Feedback Generated</div>
-                <div class="sub">Keywords detected: Resilience, Growth. <br><b>Tip:</b> Great eye contact! Try to be more specific about the outcome.</div>
-              </div>
-            </div>
-            <button class="btn-primary" style="width:100%; margin-top:10px;" onclick="openModal('interview')">Try Next Question</button>
-          `;
-        }
-      }, 1000);
-    }
+// â”€â”€â”€ SCROLL â”€â”€â”€
+function scrollToId(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}
 
-    function applyGig(id) {
-      document.getElementById('gig-box-'+id).innerHTML = `
-        <div style="text-align:center; padding:10px;">
-          <span class="mock-badge badge-green">Application Sent!</span>
-          <p style="font-size:11px; margin-top:5px;">Client will contact you via Rabta messenger.</p>
-        </div>
-      `;
-    }
+// â”€â”€â”€ MODAL â”€â”€â”€
+function closeModal(){document.getElementById('featureModal').classList.remove('active');document.body.style.overflow=''}
+function closeModalOverlay(e){if(e.target===document.getElementById('featureModal'))closeModal()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
 
-    // 2. MODAL DEFINITIONS
-    const modals = {
-      cv: {
-        badge: "Feature",
-        title: "Interactive CV Builder",
-        desc: "Build an ATS-ready resume in real-time. Type in the fields to see the preview.",
-        body: `
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div class="mock-screen">
-              <div class="form-group"><label>Full Name</label><input type="text" id="cv-name" placeholder="Syed Zafar" oninput="updateCV()"></div>
-              <div class="form-group"><label>Professional Summary</label><textarea id="cv-exp" style="width:100%; height:80px; border:1px solid var(--border); border-radius:4px; font-family:inherit; padding:8px;" oninput="updateCV()"></textarea></div>
-            </div>
-            <div id="cv-preview" style="background:white; border:1px solid #ccc; padding:15px; font-size:11px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-              <h3 id="prev-name" style="margin-bottom:2px; font-family:'DM Sans';">YOUR NAME</h3>
-              <div style="border-bottom:2px solid var(--red); margin-bottom:10px;"></div>
-              <p style="font-weight:bold; margin-bottom:4px;">EXPERIENCE</p>
-              <p id="prev-exp" style="color:#555;">Details will appear here...</p>
-            </div>
-          </div>
-          <button class="btn-primary" style="margin-top:15px; width:100%;" onclick="alert('Resume Saved to Profile!')">Save to Profile</button>
-        `
-      },
-      tracker: {
-        badge: "Active",
-        title: "Application Pipeline",
-        desc: "Add companies you are applying to and track their current status.",
-        body: `
-          <div class="mock-screen">
-            <div style="display:flex; gap:5px; margin-bottom:15px;">
-              <input type="text" id="comp-name" placeholder="Company (e.g. National Foods)" style="flex:1; padding:8px; border-radius:5px; border:1px solid #ddd;">
-              <button class="btn-primary" style="padding:5px 15px;" onclick="addCompany()">Add</button>
-            </div>
-            <div id="company-list">
-              <div class="mock-card"><div class="mock-card-text"><div class="title">Unilever Pakistan</div><div class="sub">Status: Interviewing</div></div><span class="mock-badge badge-green">In Progress</span></div>
-              <div class="mock-card"><div class="mock-card-text"><div class="title">Jazz</div><div class="sub">Status: Online Test</div></div><span class="mock-badge badge-orange">Pending</span></div>
-            </div>
-          </div>
-        `
-      },
-      interview: {
-        badge: "AI Powered",
-        title: "AI Interview Prep",
-        desc: "Simulate a live interview. We use AI to analyze your speech and body language.",
-        body: `
-          <div class="mock-screen" id="interview-area" style="text-align:center;">
-             <div style="background:#000; width:100%; height:120px; border-radius:8px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">[CAMERA FEED PREVIEW]</div>
-            <p style="font-weight:600; margin-bottom:10px; font-size:0.9rem;">"Tell me about a time you showed leadership."</p>
-            <div id="timer" style="color:var(--red); font-size:24px; font-weight:bold; margin:10px 0; display:none;">00:05</div>
-            <button class="btn-primary" id="record-btn" style="width:100%;" onclick="startInterview()">Start Practice Session</button>
-          </div>
-        `
-      },
-      gigs: {
-        badge: "Marketplace",
-        title: "Student Gigs",
-        desc: "Apply for tasks to build your portfolio and earn PKR.",
-        body: `
-          <div class="mock-screen">
-            <div id="gig-box-1" class="gig-item">
-              <div class="gig-title">Logo Design for IBA Startup</div>
-              <div class="gig-meta"><span class="gig-price">PKR 5,000</span> <span class="mock-badge badge-green">Active</span></div>
-              <button class="btn-primary" style="padding:5px; font-size:12px; margin-top:10px; width:100%" onclick="applyGig(1)">Apply Now</button>
-            </div>
-            <div id="gig-box-2" class="gig-item" style="margin-top:10px;">
-              <div class="gig-title">Translate Urdu Document (500 words)</div>
-              <div class="gig-meta"><span class="gig-price">PKR 2,000</span> <span class="mock-badge badge-green">Active</span></div>
-              <button class="btn-primary" style="padding:5px; font-size:12px; margin-top:10px; width:100%" onclick="applyGig(2)">Apply Now</button>
-            </div>
-          </div>
-        `
-      }
-    };
+function openModal(key){
+  const cfg={
+    companies:{badge:'Company Discovery',title:'Follow Companies',desc:'Follow SMEs you care about. Get notified the moment they open internship applications.'},
+    deadlines:{badge:'Deadline Tracker',title:'Track Your Deadlines',desc:'Add real application deadlines. See countdowns and get a clear view of what's coming up.'},
+    autofill:{badge:'Auto-fill',title:'Apply in One Click',desc:'Your saved profile auto-fills every company application form instantly.'},
+    cv:{badge:'Smart CV Builder',title:'Generate Your CV',desc:'Choose a role type and get a tailored CV generated from your profile data.'},
+    coaching:{badge:'Interview Coaching',title:'Prep Per Company',desc:'Track your interview prep steps for each company. Tick them off as you go.'},
+    gigsFeature:{badge:'Gigs Marketplace',title:'Browse & Post Gigs',desc:'Find micro-tasks to earn money, or post your own services for others to hire.'}
+  };
+  const c=cfg[key];
+  document.getElementById('modalBadge').textContent=c.badge;
+  document.getElementById('modalTitle').textContent=c.title;
+  document.getElementById('modalDesc').textContent=c.desc;
+  document.getElementById('modalBody').innerHTML='';
+  document.getElementById('featureModal').classList.add('active');
+  document.body.style.overflow='hidden';
+  if(key==='companies')renderCompanies();
+  else if(key==='deadlines')renderDeadlines();
+  else if(key==='autofill')renderAutofill();
+  else if(key==='cv')renderCV();
+  else if(key==='coaching')renderCoaching();
+  else if(key==='gigsFeature')renderGigs();
+}
 
-    function openModal(key) {
-      const m = modals[key];
-      document.getElementById('modalBadge').textContent = m.badge;
-      document.getElementById('modalTitle').textContent = m.title;
-      document.getElementById('modalDesc').textContent = m.desc;
-      document.getElementById('modalBody').innerHTML = m.body;
-      document.getElementById('featureModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+// â”€â”€â”€ PROFILE â”€â”€â”€
+function getProfile(){return load('rabta_profile',null)}
 
-    function closeModalBtn() {
-      document.getElementById('featureModal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
+// â”€â”€â”€ 1. COMPANIES â”€â”€â”€
+const ALL_COMPANIES=[
+  {id:'netsol',name:'Netsol Technologies',sector:'Software & IT',color:'#2c3e50'},
+  {id:'systems',name:'Systems Ltd',sector:'Technology',color:'#8e44ad'},
+  {id:'hbl',name:'HBL',sector:'Banking & Finance',color:'#e67e22'},
+  {id:'unilever',name:'Unilever Pakistan',sector:'FMCG',color:'#27ae60'},
+  {id:'mcb',name:'MCB Bank',sector:'Banking',color:'#2980b9'},
+  {id:'engro',name:'Engro Corporation',sector:'Conglomerate',color:'#c0392b'},
+  {id:'nestle',name:'NestlÃ© Pakistan',sector:'FMCG',color:'#16a085'},
+  {id:'techaccess',name:'TechAccess',sector:'IT Solutions',color:'#d35400'},
+  {id:'jazz',name:'Jazz Pakistan',sector:'Telecom',color:'#8e44ad'},
+  {id:'psx',name:'PSX',sector:'Finance',color:'#1a5276'},
+];
+function renderCompanies(){
+  const followed=load('rabta_followed',[]);
+  const body=document.getElementById('modalBody');
+  body.innerHTML=`
+    <div class="tab-bar">
+      <div class="tab active" onclick="companiesTab('all',this)">All companies</div>
+      <div class="tab" onclick="companiesTab('following',this)">Following (${followed.length})</div>
+    </div>
+    <div id="companyList"></div>`;
+  showCompanyList('all',followed);
+}
+function companiesTab(tab,el){
+  document.querySelectorAll('.tab-bar .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  showCompanyList(tab,load('rabta_followed',[]));
+}
+function showCompanyList(tab,followed){
+  const list=document.getElementById('companyList');
+  if(!list)return;
+  const companies=tab==='following'?ALL_COMPANIES.filter(c=>followed.includes(c.id)):ALL_COMPANIES;
+  if(companies.length===0){list.innerHTML='<div class="empty-state"><span>ðŸ¢</span>You haven't followed any companies yet.</div>';return;}
+  list.innerHTML=companies.map(c=>{
+    const isF=followed.includes(c.id);
+    return`<div class="fi-row">
+      <div class="fi-avatar" style="background:${c.color}">${c.name.substring(0,2)}</div>
+      <div class="fi-info"><div class="name">${c.name}</div><div class="sub">${c.sector}</div></div>
+      <button class="fi-btn-sm ${isF?'active':''}" onclick="toggleFollow('${c.id}',this)">${isF?'Following':'Follow'}</button>
+    </div>`;
+  }).join('');
+}
+function toggleFollow(id,btn){
+  let followed=load('rabta_followed',[]);
+  if(followed.includes(id)){followed=followed.filter(f=>f!==id);btn.textContent='Follow';btn.classList.remove('active')}
+  else{followed.push(id);btn.textContent='Following';btn.classList.add('active')}
+  save('rabta_followed',followed);
+  // update tab count
+  document.querySelectorAll('.tab-bar .tab')[1].textContent=`Following (${followed.length})`;
+}
 
-    function closeModal(e) {
-      if (e.target === document.getElementById('featureModal')) closeModalBtn();
-    }
+// â”€â”€â”€ 2. DEADLINES â”€â”€â”€
+function renderDeadlines(){
+  const deadlines=load('rabta_deadlines',[]);
+  const body=document.getElementById('modalBody');
+  body.innerHTML=`
+    <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+      <input class="fi-input" id="dl_company" placeholder="Company name" style="flex:1;min-width:140px;margin-bottom:0">
+      <input class="fi-input" id="dl_role" placeholder="Role e.g. Finance Intern" style="flex:1;min-width:140px;margin-bottom:0">
+      <input class="fi-input" type="date" id="dl_date" style="flex:1;min-width:130px;margin-bottom:0">
+      <button class="fi-btn" onclick="addDeadline()">Add</button>
+    </div>
+    <div id="deadlineList"></div>`;
+  renderDeadlineList();
+}
+function addDeadline(){
+  const co=document.getElementById('dl_company').value.trim();
+  const ro=document.getElementById('dl_role').value.trim();
+  const dt=document.getElementById('dl_date').value;
+  if(!co||!dt)return alert('Please enter a company name and date.');
+  const deadlines=load('rabta_deadlines',[]);
+  deadlines.push({id:Date.now(),company:co,role:ro||'Internship',date:dt});
+  deadlines.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  save('rabta_deadlines',deadlines);
+  document.getElementById('dl_company').value='';
+  document.getElementById('dl_role').value='';
+  document.getElementById('dl_date').value='';
+  renderDeadlineList();
+}
+function deleteDeadline(id){
+  save('rabta_deadlines',load('rabta_deadlines',[]).filter(d=>d.id!==id));
+  renderDeadlineList();
+}
+function renderDeadlineList(){
+  const list=document.getElementById('deadlineList');
+  if(!list)return;
+  const deadlines=load('rabta_deadlines',[]);
+  if(deadlines.length===0){list.innerHTML='<div class="empty-state"><span>ðŸ“…</span>No deadlines yet. Add your first one above.</div>';return;}
+  const today=new Date();today.setHours(0,0,0,0);
+  list.innerHTML=deadlines.map(d=>{
+    const dd=new Date(d.date);dd.setHours(0,0,0,0);
+    const diff=Math.round((dd-today)/(1000*60*60*24));
+    const urgent=diff<=3;
+    let countdownText=diff<0?'Passed':diff===0?'Today!':diff===1?'Tomorrow':`${diff} days left`;
+    let countdownClass=diff<0?'badge-gray':urgent?'badge-red':'badge-green';
+    return`<div class="deadline-item ${urgent&&diff>=0?'urgent':''}">
+      <div class="dl-info">
+        <div class="dl-company">${d.company} â€” ${d.role}</div>
+        <div class="dl-date">Deadline: ${dd.toLocaleDateString('en-PK',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+      <span class="fi-badge ${countdownClass}">${countdownText}</span>
+      <button class="dl-del" onclick="deleteDeadline(${d.id})">ðŸ—‘</button>
+    </div>`;
+  }).join('');
+}
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+// â”€â”€â”€ 3. AUTO-FILL â”€â”€â”€
+function renderAutofill(){
+  const p=getProfile();
+  const body=document.getElementById('modalBody');
+  if(!p){
+    body.innerHTML=`<div class="empty-state"><span>ðŸ‘¤</span>No profile found.<br>Please <a href="#signup" onclick="closeModal();scrollToId('signup')" style="color:var(--red)">sign up first</a> to use auto-fill.</div>`;
+    return;
+  }
+  const companies=load('rabta_followed',[]).map(id=>ALL_COMPANIES.find(c=>c.id===id)).filter(Boolean);
+  const companyOptions=companies.length?companies.map(c=>`<option value="${c.id}">${c.name}</option>`).join(''):'<option>HBL</option><option>Unilever Pakistan</option><option>Netsol Technologies</option>';
+  body.innerHTML=`
+    <div class="form-group"><label>Select company to apply to</label>
+      <select id="af_company" class="fi-input" style="margin-bottom:0">${companyOptions}</select>
+    </div>
+    <div style="background:var(--gray);border-radius:12px;padding:1.25rem;margin:1rem 0">
+      <p style="font-size:12px;font-weight:500;color:var(--red);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">Auto-filled from your profile</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${field('Full Name',p.fname+' '+p.lname)}
+        ${field('Email',p.email)}
+        ${field('Phone',p.phone)}
+        ${field('University',p.uni)}
+        ${field('Year',p.year)}
+        ${field('CGPA',p.cgpa)}
+        ${field('Field',p.field)}
+      </div>
+      <div style="margin-top:10px">${field('Skills',p.skills)}</div>
+    </div>
+    <button class="fi-btn" style="width:100%" onclick="submitApplication()">Submit Application â†’</button>
+    <div id="af_success" style="display:none;text-align:center;padding:1rem;color:var(--red);font-weight:500">âœ“ Application submitted successfully!</div>`;
+}
+function field(label,val){return`<div><div style="font-size:11px;color:var(--text-muted);margin-bottom:3px">${label}</div><div style="background:var(--white);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--black)">${val||'â€”'}</div></div>`}
+function submitApplication(){
+  const co=document.getElementById('af_company');
+  const name=co?co.options[co.selectedIndex].text:'the company';
+  document.getElementById('af_success').style.display='block';
+  document.getElementById('af_success').textContent=`âœ“ Application sent to ${name} successfully!`;
+  const apps=load('rabta_applications',[]);
+  apps.push({company:name,date:new Date().toISOString()});
+  save('rabta_applications',apps);
+}
 
-    function submitSignup() {
-      document.getElementById('signupFormContainer').innerHTML = `
-        <div style="text-align:center; padding:2rem;">
-          <div style="font-size:3rem; margin-bottom:1rem;">🚀</div>
-          <h3 style="font-family:'Bebas Neue', sans-serif; font-size:2rem; margin-bottom:0.5rem;">You're on the list!</h3>
-          <p style="color:var(--text-muted);">We'll email you as soon as the beta is ready for your role.</p>
-        </div>
-      `;
-    }
+// â”€â”€â”€ 4. CV BUILDER â”€â”€â”€
+function renderCV(){
+  const p=getProfile();
+  const body=document.getElementById('modalBody');
+  if(!p){body.innerHTML=`<div class="empty-state"><span>ðŸ“„</span>No profile found.<br>Please <a href="#" onclick="closeModal();scrollToId('signup')" style="color:var(--red)">sign up first</a>.</div>`;return;}
+  body.innerHTML=`
+    <div class="form-group"><label>Choose role type to tailor your CV</label>
+      <select id="cv_role" onchange="generateCV()" class="fi-input" style="margin-bottom:0">
+        <option value="finance">Finance / Banking</option>
+        <option value="marketing">Marketing</option>
+        <option value="tech">Computer Science / IT</option>
+        <option value="hr">HR / Management</option>
+        <option value="general">General</option>
+      </select>
+    </div>
+    <div id="cvPreview" style="margin-top:1rem"></div>
+    <button class="fi-btn" style="width:100%;margin-top:1rem" onclick="downloadCV()">Download CV as PDF</button>`;
+  generateCV();
+}
+function generateCV(){
+  const p=getProfile();if(!p)return;
+  const role=document.getElementById('cv_role').value;
+  const summaries={
+    finance:`Detail-oriented ${p.field} student at ${p.uni} with a CGPA of ${p.cgpa}. Experienced in financial analysis and quantitative problem-solving. Seeking a finance internship to apply academic knowledge in a professional setting.`,
+    marketing:`Creative and data-driven ${p.field} student at ${p.uni} with a CGPA of ${p.cgpa}. Passionate about brand strategy, consumer insights, and digital marketing. Looking to contribute fresh ideas to a dynamic marketing team.`,
+    tech:`Technically skilled student at ${p.uni} with a CGPA of ${p.cgpa} and hands-on experience in software and data tools. Eager to contribute to a technology-driven organisation through a meaningful internship.`,
+    hr:`People-oriented ${p.field} student at ${p.uni} with a CGPA of ${p.cgpa}. Strong communicator with a passion for organisational behaviour and talent development. Seeking an HR internship to grow in a professional environment.`,
+    general:`Motivated and well-rounded student at ${p.uni} with a CGPA of ${p.cgpa}. Brings strong analytical and communication skills. Looking for an internship opportunity to develop professionally.`
+  };
+  const skills=p.skills.split(',').map(s=>s.trim()).filter(Boolean);
+  document.getElementById('cvPreview').innerHTML=`
+    <div class="cv-preview">
+      <div class="cv-name">${p.fname} ${p.lname}</div>
+      <div class="cv-contact">${p.email} &nbsp;|&nbsp; ${p.phone} &nbsp;|&nbsp; ${p.uni}</div>
+      <div class="cv-section-head">Profile Summary</div>
+      <div class="cv-line">${summaries[role]}</div>
+      <div class="cv-section-head">Education</div>
+      <div class="cv-line"><strong>${p.uni}</strong> â€” ${p.field}</div>
+      <div class="cv-sub">CGPA: ${p.cgpa} &nbsp;|&nbsp; ${p.year}</div>
+      <div class="cv-section-head">Skills</div>
+      <div class="cv-line">${skills.join(' &nbsp;Â·&nbsp; ')}</div>
+      <div class="cv-section-head">Interests</div>
+      <div class="cv-line">Internship-ready in ${p.field} Â· Open to cross-functional roles</div>
+    </div>`;
+}
+function downloadCV(){
+  const p=getProfile();if(!p)return;
+  const content=document.getElementById('cvPreview').innerText;
+  const blob=new Blob([content],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${p.fname}_${p.lname}_CV.txt`;
+  a.click();
+}
 
-    window.onscroll = function() {
-      const nav = document.getElementById('navbar');
-      if (window.pageYOffset > 50) {
-        nav.style.padding = "0.5rem 2.5rem";
-        nav.style.background = "rgba(255,255,255,0.95)";
-      } else {
-        nav.style.padding = "0.75rem 2.5rem";
-        nav.style.background = "rgba(255,255,255,0.85)";
-      }
-    };
-  </script>
+// â”€â”€â”€ 5. COACHING â”€â”€â”€
+const COACH_STEPS=['Research the company â€” read their website, recent news, values','Understand the role â€” what skills and traits do they look for?','Prepare your "Tell me about yourself" answer','Practice 5 common behavioural questions (STAR method)','Prepare 2â€“3 smart questions to ask the interviewer','Do a mock interview with a friend or out loud','Plan your outfit and route the day before'];
+function renderCoaching(){
+  const followed=load('rabta_followed',[]).map(id=>ALL_COMPANIES.find(c=>c.id===id)).filter(Boolean);
+  const companies=followed.length?followed:ALL_COMPANIES.slice(0,4);
+  const body=document.getElementById('modalBody');
+  body.innerHTML=`<p style="font-size:13px;color:var(--text-muted);margin-bottom:1rem">Click a company to expand your prep checklist. Tick off steps as you complete them.</p><div id="coachList">${companies.map(c=>coachItem(c)).join('')}</div>`;
+}
+function coachItem(c){
+  const progress=load('rabta_coach_'+c.id,[]);
+  const pct=Math.round((progress.length/COACH_STEPS.length)*100);
+  return`<div class="coach-company" onclick="toggleCoach('${c.id}',this)">
+    <div class="fi-avatar" style="background:${c.color};width:32px;height:32px;font-size:12px">${c.name.substring(0,2)}</div>
+    <div style="flex:1">
+      <div class="cc-name">${c.name}</div>
+      <div class="cc-progress">${progress.length}/${COACH_STEPS.length} steps completed</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    </div>
+    <span style="font-size:12px;color:var(--text-muted)">â–¼</span>
+    <div class="coach-steps" id="cs_${c.id}" onclick="event.stopPropagation()">
+      ${COACH_STEPS.map((s,i)=>{const done=progress.includes(i);return`<div class="cs-item" onclick="toggleCoachStep('${c.id}',${i})"><div class="cs-check ${done?'done':''}">${done?'âœ“':''}</div><div class="cs-text ${done?'done':''}">${s}</div></div>`}).join('')}
+    </div>
+  </div>`;
+}
+function toggleCoach(id,el){
+  const steps=document.getElementById('cs_'+id);
+  if(steps)steps.classList.toggle('open');
+}
+function toggleCoachStep(companyId,stepIndex){
+  let progress=load('rabta_coach_'+companyId,[]);
+  if(progress.includes(stepIndex))progress=progress.filter(i=>i!==stepIndex);
+  else progress.push(stepIndex);
+  save('rabta_coach_'+companyId,progress);
+  // re-render just this company
+  const company=ALL_COMPANIES.find(c=>c.id===companyId);
+  const wasOpen=document.getElementById('cs_'+companyId)?.classList.contains('open');
+  const items=document.querySelectorAll('#coachList .coach-company');
+  const idx=ALL_COMPANIES.findIndex(c=>c.id===companyId);
+  // full re-render
+  const followed=load('rabta_followed',[]).map(id=>ALL_COMPANIES.find(c=>c.id===id)).filter(Boolean);
+  const companies=followed.length?followed:ALL_COMPANIES.slice(0,4);
+  document.getElementById('coachList').innerHTML=companies.map(c=>coachItem(c)).join('');
+  if(wasOpen){const s=document.getElementById('cs_'+companyId);if(s)s.classList.add('open');}
+}
+
+// â”€â”€â”€ 6. GIGS â”€â”€â”€
+function renderGigs(){
+  const gigs=load('rabta_gigs',[
+    {id:1,title:'Proofread 3,000-word Economics research paper',price:1500,deadline:'2025-05-20',poster:'Dr. Farooq',mine:false},
+    {id:2,title:'Create 20 MCQs for Marketing mid-term quiz',price:800,deadline:'2025-05-22',poster:'Prof. Nadia',mine:false},
+    {id:3,title:'Data entry â€” 200 rows in Excel',price:1200,deadline:'2025-05-19',poster:'Ahmed & Co.',mine:false},
+    {id:4,title:'Translate 500 words Urdu â†’ English',price:2000,deadline:'2025-05-25',poster:'Legal firm',mine:false},
+  ]);
+  const body=document.getElementById('modalBody');
+  body.innerHTML=`
+    <div class="tab-bar">
+      <div class="tab active" onclick="gigsTab('browse',this)">Browse gigs</div>
+      <div class="tab" onclick="gigsTab('post',this)">Post a gig</div>
+    </div>
+    <div id="gigsContent"></div>`;
+  showGigsBrowse(gigs);
+}
+function gigsTab(tab,el){
+  document.querySelectorAll('.tab-bar .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(tab==='browse')showGigsBrowse(load('rabta_gigs',[]));
+  else showGigsPost();
+}
+function showGigsBrowse(gigs){
+  const el=document.getElementById('gigsContent');if(!el)return;
+  if(!gigs.length){el.innerHTML='<div class="empty-state"><span>ðŸ’¼</span>No gigs yet. Be the first to post one!</div>';return;}
+  el.innerHTML=gigs.map(g=>`
+    <div class="gig-card">
+      <h4>${g.title}</h4>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">Posted by ${g.poster}</div>
+      <div class="gig-meta">
+        <span class="gig-price">PKR ${g.price.toLocaleString()}</span>
+        <span class="gig-deadline">Deadline: ${new Date(g.deadline).toLocaleDateString('en-PK',{day:'numeric',month:'short'})}</span>
+        <button class="fi-btn-sm" onclick="applyGig(${g.id},this)">Apply</button>
+      </div>
+    </div>`).join('');
+}
+function applyGig(id,btn){btn.textContent='Applied âœ“';btn.classList.add('active');btn.disabled=true;}
+function showGigsPost(){
+  const el=document.getElementById('gigsContent');if(!el)return;
+  el.innerHTML=`
+    <div class="form-group"><label>Gig title</label><input class="fi-input" id="g_title" placeholder="e.g. Proofread 2000-word essay" style="margin-bottom:0"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group"><label>Price (PKR)</label><input class="fi-input" id="g_price" type="number" placeholder="1500" style="margin-bottom:0"></div>
+      <div class="form-group"><label>Deadline</label><input class="fi-input" id="g_deadline" type="date" style="margin-bottom:0"></div>
+    </div>
+    <button class="fi-btn" style="width:100%;margin-top:.5rem" onclick="postGig()">Post Gig â†’</button>
+    <div id="gig_success" style="display:none;text-align:center;padding:1rem;color:var(--red);font-weight:500">âœ“ Gig posted successfully!</div>`;
+}
+function postGig(){
+  const t=document.getElementById('g_title').value.trim();
+  const pr=document.getElementById('g_price').value;
+  const dl=document.getElementById('g_deadline').value;
+  if(!t||!pr||!dl)return alert('Please fill in all fields.');
+  const p=getProfile();
+  const gigs=load('rabta_gigs',[]);
+  gigs.unshift({id:Date.now(),title:t,price:parseInt(pr),deadline:dl,poster:p?p.fname+' '+p.lname:'You',mine:true});
+  save('rabta_gigs',gigs);
+  document.getElementById('gig_success').style.display='block';
+  setTimeout(()=>{document.getElementById('g_title').value='';document.getElementById('g_price').value='';document.getElementById('g_deadline').value='';document.getElementById('gig_success').style.display='none';},2000);
+}
+
+// â”€â”€â”€ SIGNUP â”€â”€â”€
+function validateField(id,errId,check){
+  const el=document.getElementById(id);
+  const err=document.getElementById(errId);
+  const ok=check(el.value);
+  el.classList.toggle('error',!ok);
+  err.style.display=ok?'none':'block';
+  return ok;
+}
+function submitSignup(){
+  const checks=[
+    validateField('s_fname','e_fname',v=>v.trim().length>0),
+    validateField('s_lname','e_lname',v=>v.trim().length>0),
+    validateField('s_email','e_email',v=>/^[^@]+@[^@]+\.[^@]+$/.test(v.trim())),
+    validateField('s_phone','e_phone',v=>v.trim().length>=7),
+    validateField('s_uni','e_uni',v=>v!==''),
+    validateField('s_year','e_year',v=>v!==''),
+    validateField('s_cgpa','e_cgpa',v=>v!==''&&parseFloat(v)>=0&&parseFloat(v)<=4),
+    validateField('s_field','e_field',v=>v!==''),
+    validateField('s_skills','e_skills',v=>v.trim().length>0),
+  ];
+  if(!checks.every(Boolean))return;
+  const profile={
+    fname:document.getElementById('s_fname').value.trim(),
+    lname:document.getElementById('s_lname').value.trim(),
+    email:document.getElementById('s_email').value.trim(),
+    phone:document.getElementById('s_phone').value.trim(),
+    uni:document.getElementById('s_uni').value,
+    year:document.getElementById('s_year').value,
+    cgpa:document.getElementById('s_cgpa').value,
+    field:document.getElementById('s_field').value,
+    skills:document.getElementById('s_skills').value.trim(),
+  };
+  save('rabta_profile',profile);
+  document.getElementById('signupForm').style.display='none';
+  document.getElementById('successMsg').style.display='block';
+}
+</script>
 </body>
 </html>
-```
+
